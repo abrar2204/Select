@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select Component</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- 
+        Build a select component with the following functionality: 
+
+        1. It should display the options on clicking down arrow
+        2. Ability to select multiple options - selected options should be shown in the input and removed from the drop down
+        3. Ability to select only single option - 
+        4. Ability to search for the options after the user enters a search text and presses enter
+
+        Do not use any external libraries 
+    -->
+    <div id="select">
+      <div id="selector">
+        <div id="selected-options">
+          <p class="selected-option">Monster Hunter <span>X</span></p>
+          <p class="selected-option">Tomb raider <span>X</span></p>
+        </div>
+        <div id="search">
+          <input type="text" id="input" placeholder="Search.." />
+
+          <img
+            id="arrow"
+            src="https://img.icons8.com/ios/20/000000/expand-arrow--v2.png"
+          />
+        </div>
+      </div>
+      <div id="options">
+        <p class="option">Uncharted</p>
+
+        <p class="option">Last of Us</p>
+      </div>
+    </div>
+  </body>
+</html>

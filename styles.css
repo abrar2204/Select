@@ -1,0 +1,47 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+#select {
+  width: 500px;
+}
+#selector {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+#search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#input {
+  border: none;
+  outline: none;
+  padding: 5px 8px;
+  width: 90%;
+}
+#options {
+  width: 500px;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-top-color: white;
+}
+.option {
+  margin-top: 2px;
+  padding: 2px;
+}
+#selected-options {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.selected-option {
+  background-color: aqua;
+  border-radius: 5px;
+  padding: 2px;
+  margin: 2px;
+}
