@@ -14,6 +14,7 @@ const addToSelectedOptions = (option) => {
   p.addEventListener("click", (e) => {
     chosenOptions = chosenOptions.filter((o) => o !== option);
     selectedOptionsElement.removeChild(p);
+    closeOptions();
   });
 
   selectedOptionsElement.appendChild(p);
