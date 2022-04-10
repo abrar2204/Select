@@ -30,6 +30,9 @@
   border: 1px solid black;
   border-top-color: white;
 }
+#options.closed {
+  visibility: hidden;
+}
 .option {
   margin-top: 2px;
   padding: 2px;
