@@ -6,13 +6,16 @@ const selectedOptionsElement = document.getElementById("selected-options");
 let chosenOptions = [];
 const gameOptions = ["Monster Hunter", "Witcher", "Uncharted", "Last of Us"];
 
+const removeOptionFromChosenOptions = (option) =>
+  chosenOptions.filter((o) => o !== option);
+
 const addToSelectedOptions = (option) => {
   const p = document.createElement("p");
   p.append(option);
   p.classList.add("option");
 
   p.addEventListener("click", (e) => {
-    chosenOptions = chosenOptions.filter((o) => o !== option);
+    chosenOptions = removeOptionFromChosenOptions(option);
     selectedOptionsElement.removeChild(p);
     closeOptions();
   });
@@ -22,7 +25,7 @@ const addToSelectedOptions = (option) => {
 
 const addNoOptionsWhenNoOptionsAreAvailable = () => {
   if (optionsElement.children.length == 0) {
-    optionsElement.innerHTML = `<p style='text-align:center'>No Options Available..</p>`;
+    optionsElement.innerHTML = `<p style='text-align:center'>No Options Available</p>`;
   }
 };
 
@@ -48,11 +51,12 @@ addOptionsToDropDown(gameOptions);
 
 arrowElement.addEventListener("click", (e) => {
   if (optionsElement.classList.contains("closed")) {
-    showOptions();
+    inputElement.value = "";
     const filteredOptions = gameOptions.filter(
       (option) => !chosenOptions.includes(option)
     );
     addOptionsToDropDown(filteredOptions);
+    showOptions();
   } else {
     closeOptions();
   }
