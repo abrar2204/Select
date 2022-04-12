@@ -46,8 +46,6 @@ const addOptionsToDropDown = (options) => {
   addNoOptionsWhenNoOptionsAreAvailable();
 };
 
-addOptionsToDropDown(gameOptions);
-
 arrowElement.addEventListener("click", (e) => {
   if (optionsElement.classList.contains("closed")) {
     inputElement.value = "";
