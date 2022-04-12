@@ -2,6 +2,7 @@ const inputElement = document.getElementById("input");
 const arrowElement = document.getElementById("arrow");
 const optionsElement = document.getElementById("options");
 const selectedOptionsElement = document.getElementById("selected-options");
+const selectElement = document.getElementById("select");
 
 let chosenOptions = [];
 const gameOptions = [
@@ -64,6 +65,12 @@ arrowElement.addEventListener("click", (e) => {
     addOptionsToDropDown(filteredOptions);
     showOptions();
   } else {
+    closeOptions();
+  }
+});
+
+selectElement.addEventListener("blur", (e) => {
+  if (!optionsElement.classList.contains("closed")) {
     closeOptions();
   }
 });
