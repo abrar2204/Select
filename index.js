@@ -4,7 +4,16 @@ const optionsElement = document.getElementById("options");
 const selectedOptionsElement = document.getElementById("selected-options");
 
 let chosenOptions = [];
-const gameOptions = ["Monster Hunter", "Witcher", "Uncharted", "Last of Us"];
+const gameOptions = [
+  "Monster Hunter",
+  "Witcher",
+  "Uncharted",
+  "Last of Us",
+  "Monster Hunter",
+  "Witcher",
+  "Uncharted",
+  "Last of Us",
+];
 
 const removeOptionFromChosenOptions = (option) =>
   chosenOptions.filter((o) => o !== option);
