@@ -4,76 +4,110 @@ const optionsElement = document.getElementById("options");
 const selectedOptionsElement = document.getElementById("selected-options");
 const selectElement = document.getElementById("select");
 
-let chosenOptions = [];
 const gameOptions = [
   "Monster Hunter",
   "Witcher",
   "Uncharted",
   "Last of Us",
-  "Monster Hunter",
-  "Witcher",
-  "Uncharted",
-  "Last of Us",
+  "Watch Dogs",
+  "Far Cry",
+  "Dark Souls",
+  "Hades",
 ];
 
-const removeOptionFromChosenOptions = (option) =>
+let chosenOptions = [];
+let unchosenOptions = gameOptions;
+
+const removeFromChosenOptions = (option) =>
   chosenOptions.filter((o) => o !== option);
 
+const removeFromUnChosenOptions = (option) =>
+  unchosenOptions.filter((o) => o !== option);
+
 const addToSelectedOptions = (option) => {
+  chosenOptions.push(option);
+
+  const node = createChosenNode(option);
+
+  selectedOptionsElement.appendChild(node);
+};
+
+const addNoOptionsWhenNoOptionsAreAvailable = () => {
+  if (optionsElement.children.length == 0) {
+    optionsElement.innerHTML = `<p id='no-option-available'style='text-align:center'>No Options Available</p>`;
+  }
+};
+
+const removeNoOptionAvailable = () => {
+  if (optionsElement.children.item(0).id === "no-option-available") {
+    optionsElement.innerHTML = "";
+  }
+};
+
+const createChosenNode = (option) => {
   const p = document.createElement("p");
   p.append(option);
   p.classList.add("option");
 
   p.addEventListener("click", (e) => {
-    chosenOptions = removeOptionFromChosenOptions(option);
+    chosenOptions = removeFromChosenOptions(option);
     selectedOptionsElement.removeChild(p);
-  });
 
-  selectedOptionsElement.appendChild(p);
+    removeNoOptionAvailable();
+    unchosenOptions.push(option);
+    optionsElement.appendChild(createUnChosenNode(option));
+  });
+  return p;
 };
 
-const addNoOptionsWhenNoOptionsAreAvailable = () => {
-  if (optionsElement.children.length == 0) {
-    optionsElement.innerHTML = `<p style='text-align:center'>No Options Available</p>`;
-  }
+const removeNodeFromOptionDropDown = (node) => {
+  unchosenOptions = removeFromUnChosenOptions(node.textContent);
+  optionsElement.removeChild(node);
+};
+
+const createUnChosenNode = (option) => {
+  const p = document.createElement("p");
+  p.append(option);
+  p.classList.add("option");
+  p.addEventListener("click", () => {
+    addToSelectedOptions(option);
+    removeNodeFromOptionDropDown(p);
+    addNoOptionsWhenNoOptionsAreAvailable();
+  });
+  return p;
 };
 
 const addOptionsToDropDown = (options) => {
-  const optionNodes = options.map((option) => {
-    const p = document.createElement("p");
-    p.append(option);
-    p.classList.add("option");
-    p.addEventListener("click", () => {
-      addToSelectedOptions(option);
-      optionsElement.removeChild(p);
-      addNoOptionsWhenNoOptionsAreAvailable();
-      chosenOptions.push(option);
-    });
-    return p;
-  });
+  const optionNodes = options.map((option) => createUnChosenNode(option));
   optionsElement.innerHTML = "";
-  optionNodes.forEach((o) => optionsElement.appendChild(o));
+  optionNodes.forEach((node) => optionsElement.appendChild(node));
   addNoOptionsWhenNoOptionsAreAvailable();
 };
+
+addOptionsToDropDown(unchosenOptions);
 
 arrowElement.addEventListener("click", (e) => {
   if (optionsElement.classList.contains("closed")) {
     inputElement.value = "";
-    const filteredOptions = gameOptions.filter(
-      (option) => !chosenOptions.includes(option)
-    );
-    addOptionsToDropDown(filteredOptions);
     showOptions();
   } else {
     closeOptions();
   }
 });
 
-selectElement.addEventListener("blur", (e) => {
+selectElement.addEventListener("focusout", (e) => {
   if (!optionsElement.classList.contains("closed")) {
     closeOptions();
+    addOptionsToDropDown(unchosenOptions);
   }
+  inputElement.value = "";
 });
+
+// inputElement.addEventListener("focus", (e) => {
+//   if (optionsElement.classList.contains("closed")) {
+//     showOptions();
+//   }
+// });
 
 const showOptions = () => {
   arrowElement.setAttribute(
