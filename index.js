@@ -18,11 +18,8 @@ const gameOptions = [
 let chosenOptions = [];
 let unchosenOptions = gameOptions;
 
-const removeFromChosenOptions = (option) =>
-  chosenOptions.filter((o) => o !== option);
-
-const removeFromUnChosenOptions = (option) =>
-  unchosenOptions.filter((o) => o !== option);
+const removeElementFromArray = (array, elementToBeRemoved) =>
+  array.filter((element) => element !== elementToBeRemoved);
 
 const addToSelectedOptions = (option) => {
   chosenOptions.push(option);
@@ -40,7 +37,7 @@ const addNoOptionsWhenNoOptionsAreAvailable = () => {
 
 const removeNoOptionAvailable = () => {
   if (optionsElement.children.item(0).id === "no-option-available") {
-    optionsElement.innerHTML = "";
+    optionsElement.removeChild(optionsElement.children.item(0));
   }
 };
 
@@ -50,7 +47,7 @@ const createChosenNode = (option) => {
   p.classList.add("option");
 
   p.addEventListener("click", (e) => {
-    chosenOptions = removeFromChosenOptions(option);
+    chosenOptions = removeElementFromArray(chosenOptions, option);
     selectedOptionsElement.removeChild(p);
 
     removeNoOptionAvailable();
@@ -61,7 +58,7 @@ const createChosenNode = (option) => {
 };
 
 const removeNodeFromOptionDropDown = (node) => {
-  unchosenOptions = removeFromUnChosenOptions(node.textContent);
+  unchosenOptions = removeElementFromArray(unchosenOptions, node.textContent);
   optionsElement.removeChild(node);
 };
 
@@ -84,8 +81,6 @@ const addOptionsToDropDown = (options) => {
   addNoOptionsWhenNoOptionsAreAvailable();
 };
 
-addOptionsToDropDown(unchosenOptions);
-
 arrowElement.addEventListener("click", (e) => {
   if (optionsElement.classList.contains("closed")) {
     inputElement.value = "";
@@ -95,19 +90,13 @@ arrowElement.addEventListener("click", (e) => {
   }
 });
 
-selectElement.addEventListener("focusout", (e) => {
+selectElement.addEventListener("blur", (e) => {
   if (!optionsElement.classList.contains("closed")) {
     closeOptions();
     addOptionsToDropDown(unchosenOptions);
   }
   inputElement.value = "";
 });
-
-// inputElement.addEventListener("focus", (e) => {
-//   if (optionsElement.classList.contains("closed")) {
-//     showOptions();
-//   }
-// });
 
 const showOptions = () => {
   arrowElement.setAttribute(
@@ -141,3 +130,6 @@ inputElement.addEventListener("keyup", (event) => {
     addOptionsToDropDown(filteredOptions);
   }
 });
+
+// Add option on first render
+addOptionsToDropDown(unchosenOptions);
