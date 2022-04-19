@@ -1,3 +1,4 @@
+const { createSelect } = require("./select");
 const inputElement = document.getElementById("input");
 const arrowElement = document.getElementById("arrow");
 const optionsElement = document.getElementById("options");
@@ -5,7 +6,7 @@ const selectedOptionsElement = document.getElementById("selected-options");
 const selectElement = document.getElementById("select");
 
 const gameOptions = [
-  "Monster Hunter",
+  "Monste Hunter",
   "Witcher",
   "Uncharted",
   "Last of Us",
@@ -15,19 +16,7 @@ const gameOptions = [
   "Hades",
 ];
 
-let chosenOptions = [];
-let unchosenOptions = gameOptions;
-
-const removeElementFromArray = (array, elementToBeRemoved) =>
-  array.filter((element) => element !== elementToBeRemoved);
-
-const addToSelectedOptions = (option) => {
-  chosenOptions.push(option);
-
-  const node = createChosenNode(option);
-
-  selectedOptionsElement.appendChild(node);
-};
+const select = createSelect(gameOptions);
 
 const addNoOptionsWhenNoOptionsAreAvailable = () => {
   if (optionsElement.children.length == 0) {
@@ -41,25 +30,40 @@ const removeNoOptionAvailable = () => {
   }
 };
 
+const addToSelectedAndRemoveFromUnSelectedDOM = (
+  optionToBeAdded,
+  nodeToBeRemoved
+) => {
+  const node = createChosenNode(optionToBeAdded);
+  selectedOptionsElement.appendChild(node);
+
+  optionsElement.removeChild(nodeToBeRemoved);
+
+  addNoOptionsWhenNoOptionsAreAvailable();
+};
+
+const removeFromSelectedAndAddToUnSelectedDOM = (
+  optionToBeAdded,
+  nodeToBeRemoved
+) => {
+  selectedOptionsElement.removeChild(nodeToBeRemoved);
+
+  removeNoOptionAvailable();
+
+  optionsElement.appendChild(createUnChosenNode(optionToBeAdded));
+};
+
 const createChosenNode = (option) => {
   const p = document.createElement("p");
   p.append(option);
   p.classList.add("option");
 
   p.addEventListener("click", (e) => {
-    chosenOptions = removeElementFromArray(chosenOptions, option);
-    selectedOptionsElement.removeChild(p);
+    select.unSelectAOption(option);
 
-    removeNoOptionAvailable();
-    unchosenOptions.push(option);
-    optionsElement.appendChild(createUnChosenNode(option));
+    removeFromSelectedAndAddToUnSelectedDOM(option, p);
   });
   return p;
-};
-
-const removeNodeFromOptionDropDown = (node) => {
-  unchosenOptions = removeElementFromArray(unchosenOptions, node.textContent);
-  optionsElement.removeChild(node);
 };
 
 const createUnChosenNode = (option) => {
@@ -67,9 +71,9 @@ const createUnChosenNode = (option) => {
   p.append(option);
   p.classList.add("option");
   p.addEventListener("click", () => {
-    addToSelectedOptions(option);
-    removeNodeFromOptionDropDown(p);
-    addNoOptionsWhenNoOptionsAreAvailable();
+    select.selectAOption(option);
+
+    addToSelectedAndRemoveFromUnSelectedDOM(option, p);
   });
   return p;
 };
@@ -83,7 +87,6 @@ const addOptionsToDropDown = (options) => {
 
 arrowElement.addEventListener("click", (e) => {
   if (optionsElement.classList.contains("closed")) {
-    inputElement.value = "";
     showOptions();
   } else {
     closeOptions();
@@ -93,7 +96,6 @@ arrowElement.addEventListener("click", (e) => {
 selectElement.addEventListener("blur", (e) => {
   if (!optionsElement.classList.contains("closed")) {
     closeOptions();
-    addOptionsToDropDown(unchosenOptions);
   }
   inputElement.value = "";
 });
@@ -104,6 +106,7 @@ const showOptions = () => {
     "https://img.icons8.com/ios/20/000000/delete-sign--v1.png"
   );
   optionsElement.classList.remove("closed");
+  addOptionsToDropDown(select.getUnSelectedOptions());
 };
 
 const closeOptions = () => {
@@ -115,7 +118,7 @@ const closeOptions = () => {
 };
 
 const checkIfOptionIsNotChosenAndIncludesText = (option, text) =>
-  !chosenOptions.includes(option) &&
+  !select.getSelectedOptions().includes(option) &&
   option.toLowerCase().includes(text.toLowerCase());
 
 inputElement.addEventListener("keyup", (event) => {
@@ -123,13 +126,12 @@ inputElement.addEventListener("keyup", (event) => {
     showOptions();
 
     const text = event.target.value;
-    const filteredOptions = gameOptions.filter((option) =>
-      checkIfOptionIsNotChosenAndIncludesText(option, text)
-    );
+    const filteredOptions = select
+      .getUnSelectedOptions()
+      .filter((option) =>
+        checkIfOptionIsNotChosenAndIncludesText(option, text)
+      );
 
     addOptionsToDropDown(filteredOptions);
   }
 });
-
-// Add option on first render
-addOptionsToDropDown(unchosenOptions);
