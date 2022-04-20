@@ -1,4 +1,8 @@
+scopeconfig:
+  - scope: node
 fileignoreconfig:
   - filename: index.js
     checksum: 33f921c8d3c58811f030cc9a4dbbfffb8475351cc570a0f3a23e9fe15c6ba9bb
+  - filename: build/main.js
+    checksum: a8d55dbce9fe2c9ab738e95e47a2849ad8d904d772b432a31716fe8761b49136
 version: ""
